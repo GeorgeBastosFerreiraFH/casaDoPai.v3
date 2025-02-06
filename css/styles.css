@@ -1,0 +1,492 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Layout Principal */
+body {
+  @apply min-h-screen bg-base-200;
+  font-family: "Arial", sans-serif;
+}
+
+.container {
+  @apply w-full max-w-7xl mx-auto p-4;
+}
+
+/* Formulários */
+#loginForm {
+  @apply w-96 mx-auto bg-base-100 shadow-xl;
+}
+
+#cadastroForm {
+  @apply w-full max-w-2xl mx-auto bg-base-100 shadow-xl;
+}
+
+#redefinirForm {
+  @apply min-h-screen flex items-center justify-center;
+}
+
+/* Dashboard */
+#dashboard {
+  @apply w-full max-w-7xl mx-auto;
+}
+
+.dashboard-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4;
+}
+
+/* Componentes Base */
+.hidden {
+  display: none;
+}
+
+/* Cards */
+.card {
+  @apply bg-base-100 shadow-xl mb-8;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.user-card {
+  @apply w-full cursor-pointer;
+  transition: all 0.3s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.user-card-expanded {
+  max-height: none;
+  overflow: visible;
+}
+
+/* Dashboard Content */
+#dashboardContent {
+  @apply p-4 bg-base-200 rounded-box w-full;
+}
+
+/* Força da Senha */
+#forcaSenha,
+#forcaSenhaNova {
+  @apply w-full mt-2;
+}
+
+#forcaSenhaTexto,
+#forcaSenhaNovaTexto {
+  @apply text-sm mt-1 text-center;
+}
+
+/* Modal */
+.modal-box {
+  @apply max-w-2xl mx-auto relative bg-base-100 rounded-lg shadow-xl p-6;
+  transform: scale(1);
+  transition: all 0.3s ease-in-out;
+}
+
+.modal-open {
+  @apply flex items-center justify-center;
+  animation: modalFadeIn 0.3s ease-in-out;
+}
+
+/* Modal de Recuperação de Senha */
+#formRecuperacaoSenha {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+  animation: modalBackdropIn 0.3s ease-in-out;
+}
+
+#formRecuperacaoSenha .modal-box {
+  @apply w-full max-w-md mx-auto bg-base-100 rounded-lg shadow-2xl;
+  transform: scale(1);
+  transition: all 0.3s ease-in-out;
+}
+
+#formRecuperacaoSenha.fade-out {
+  animation: modalBackdropOut 0.3s ease-in-out;
+}
+
+#formRecuperacaoSenha.fade-out .modal-box {
+  transform: scale(0.95);
+  opacity: 0;
+}
+
+/* Input de Email de Recuperação */
+#emailRecuperacao {
+  @apply input input-bordered w-full mb-4;
+  transition: all 0.3s ease-in-out;
+}
+
+#emailRecuperacao:focus {
+  @apply input-primary;
+  transform: scale(1.01);
+}
+
+/* Botões do Modal de Recuperação */
+#formRecuperacaoSenha .modal-action {
+  @apply flex justify-end gap-2 mt-6;
+}
+
+#formRecuperacaoSenha .btn {
+  @apply min-w-[100px];
+  transition: all 0.2s ease-in-out;
+}
+
+/* Tema Escuro */
+[data-theme="dark"] {
+  --background-color: #1f2937;
+  --text-color: #f3f4f6;
+}
+
+[data-theme="dark"] body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes modalBackdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalBackdropOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease-in-out;
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* Efeito Flip Card */
+.flip-card {
+  perspective: 1000px;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  @apply absolute w-full h-full;
+  backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+/* Interatividade */
+.input,
+.btn {
+  transition: all 0.3s ease;
+}
+
+.input:focus {
+  @apply transform scale-[1.02];
+}
+
+.btn:hover {
+  @apply transform scale-[1.05];
+}
+
+.btn-primary:hover {
+  @apply brightness-110;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* Toggle Modo Escuro */
+#btnToggleDarkMode {
+  @apply transition-transform duration-300;
+}
+
+#btnToggleDarkMode:hover {
+  @apply transform rotate-180;
+}
+
+/* Navegação */
+.navbar {
+  @apply mb-4 rounded-lg shadow-lg bg-base-100;
+}
+
+/* Loading */
+.loading-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.loading-state {
+  @apply relative pointer-events-none opacity-75;
+}
+
+.loading-state::after {
+  content: "";
+  @apply absolute inset-0 bg-base-100 bg-opacity-50;
+}
+
+/* Toast e Validação de Formulários */
+.input-error,
+input.input-error,
+select.input-error,
+textarea.input-error {
+  @apply border-error border-2 !important;
+  animation: shake 0.5s linear;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Configurações do Toast */
+#toast-container {
+  @apply font-sans;
+}
+
+#toast-container > div {
+  @apply opacity-100 shadow-lg rounded-lg !important;
+  padding: 15px 15px 15px 50px !important;
+  width: 300px !important;
+  background-image: none !important;
+}
+
+#toast-container > .toast-success {
+  @apply bg-success text-success-content border-success !important;
+}
+
+#toast-container > .toast-error {
+  @apply bg-error text-error-content border-error !important;
+}
+
+#toast-container > .toast-info {
+  @apply bg-info text-info-content !important;
+}
+
+#toast-container > .toast-warning {
+  @apply bg-warning text-warning-content !important;
+}
+
+/* Botão Fechar Toast */
+.toast-close-button {
+  @apply opacity-70 hover:opacity-100 transition-opacity !important;
+  color: inherit !important;
+  text-shadow: none !important;
+  font-weight: 300 !important;
+  font-size: 20px !important;
+  right: 5px !important;
+  top: 5px !important;
+}
+
+/* Barra de Progresso Toast */
+#toast-container > .toast > .toast-progress {
+  @apply bg-base-content opacity-20 !important;
+  height: 3px !important;
+}
+
+/* Posicionamento Toast */
+.toast-top-right {
+  @apply top-4 right-4 !important;
+}
+
+/* Mensagens de Feedback */
+.feedback {
+  @apply text-center mt-2 p-3 rounded-lg;
+}
+
+.feedback.error-message {
+  @apply bg-error/10 text-error border border-error/20;
+}
+
+.feedback.success-message {
+  @apply bg-success/10 text-success border border-success/20;
+}
+
+/* Form Controls */
+.form-control {
+  @apply w-full;
+}
+
+.label {
+  @apply flex justify-between items-center;
+}
+
+.label-text {
+  @apply text-base-content;
+}
+
+/* Input Groups */
+.input-group {
+  @apply relative flex items-stretch w-full;
+}
+
+.input-group > .input {
+  @apply rounded-none;
+}
+
+.input-group > :first-child {
+  @apply rounded-l-lg;
+}
+
+.input-group > :last-child {
+  @apply rounded-r-lg;
+}
+
+/* Acessibilidade */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+#formRecuperacaoSenha:focus-within {
+  outline: none;
+}
+
+#formRecuperacaoSenha input:focus {
+  @apply ring-2 ring-primary ring-opacity-50;
+}
+
+/* Altura Mínima para Conteúdo */
+.min-content-height {
+  min-height: calc(100vh - 4rem);
+}
+
+/* Validação de Formulários */
+.input:invalid {
+  @apply border-error;
+}
+
+.input:valid {
+  @apply border-success;
+}
+
+/* Tooltips */
+.tooltip {
+  @apply relative inline-block;
+}
+
+.tooltip .tooltip-text {
+  @apply invisible absolute z-10 p-2 bg-neutral text-neutral-content text-sm rounded-lg opacity-0 transition-opacity duration-300;
+  width: 120px;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -60px;
+  text-align: center;
+}
+
+.tooltip:hover .tooltip-text {
+  @apply visible opacity-100;
+}
+
+/* Customização de Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-base-200;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary-focus;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .navbar {
+    @apply text-xs;
+  }
+
+  .dashboard-grid {
+    @apply grid-cols-1;
+  }
+
+  .modal-box {
+    @apply w-full;
+  }
+
+  /* Ajustes de Formulários */
+  #loginForm,
+  #cadastroForm {
+    @apply w-full;
+  }
+
+  /* Cards */
+  .card {
+    @apply mx-2;
+  }
+}
