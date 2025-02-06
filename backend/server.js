@@ -222,11 +222,9 @@ class ServerManager {
           email,
           telefone,
           senha,
-          tipousuario,
           concluiubatismo,
           participoucafe,
           participaministerio,
-          nomeministerio,
           idcelula,
           participacelula,
           ...cursos
@@ -252,9 +250,9 @@ class ServerManager {
           `
           INSERT INTO usuarios 
           (nomecompleto, datanascimento, email, telefone, senhacadastro, 
-           tipousuario, concluiubatismo, participoucafe, participaministerio, 
-           nomeministerio, idcelula, participacelula)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+           tipoUsuario, concluiuBatismo, participouCafe, participouMinisterio, 
+           idcelula, participacelula)
+          VALUES ($1, $2, $3, $4, $5, 'UsuarioComum', $6, $7, $8, $9, $10)
           RETURNING id
           `,
           [
@@ -263,11 +261,9 @@ class ServerManager {
             email,
             telefone,
             hashedPassword,
-            tipousuario || "UsuarioComum",
             !!concluiubatismo,
             !!participoucafe,
             !!participaministerio,
-            nomeministerio,
             idcelula,
             !!participacelula,
           ]
