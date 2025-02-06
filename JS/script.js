@@ -171,7 +171,9 @@ class FormManager {
 
     try {
       this.mostrarLoading();
-      const response = await fetch("http://localhost:3000/usuarios/");
+      const response = await fetch(
+        "https://casadopai-v3.onrender.com/usuarios/"
+      );
       if (!response.ok) throw new Error("Erro na resposta da rede");
       const usuarios = await response.json();
       const emailJaEmUso = usuarios.some((usuario) => usuario.email === email);
@@ -316,7 +318,7 @@ class FormManager {
 
     try {
       this.mostrarLoading();
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch("https://casadopai-v3.onrender.com/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -387,13 +389,16 @@ class FormManager {
 
     try {
       this.mostrarLoading();
-      const response = await fetch("http://localhost:3000/usuarios", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dadosCadastro),
-      });
+      const response = await fetch(
+        "https://casadopai-v3.onrender.com/usuarios",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dadosCadastro),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Erro ao cadastrar usuário");
@@ -632,13 +637,16 @@ class FormManager {
 
     try {
       this.mostrarLoading();
-      const response = await fetch("http://localhost:3000/recuperar-senha", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch(
+        "https://casadopai-v3.onrender.com/recuperar-senha",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
 
       const dados = await response.json();
 
@@ -697,13 +705,16 @@ class FormManager {
         return;
       }
 
-      const response = await fetch("http://localhost:3000/atualizar-senha", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token, novaSenha }),
-      });
+      const response = await fetch(
+        "https://casadopai-v3.onrender.com/atualizar-senha",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token, novaSenha }),
+        }
+      );
 
       const data = await response.json();
 
