@@ -257,7 +257,7 @@ class ServerManager {
           `
           INSERT INTO usuarios 
           (nomecompleto, datanascimento, email, telefone, senhacadastro, 
-           tipoUsuario, concluiuBatismo, participouCafe, participouMinisterio, 
+           tipoUsuario, concluiuBatismo, participouCafe, participaMinisterio, 
            idcelula, participacelula, nomeministerio)
           VALUES ($1, $2, $3, $4, $5, 'UsuarioComum', $6, $7, $8, $9, $10, $11)
           RETURNING id
