@@ -230,6 +230,8 @@ class ServerManager {
           ...cursos
         } = req.body;
 
+        console.log("Dados recebidos para cadastro:", req.body);
+
         if (!nomecompleto || !email || !senha) {
           return res
             .status(400)
@@ -269,11 +271,14 @@ class ServerManager {
           ]
         );
 
+        console.log("Usuário cadastrado com sucesso:", result);
+
         res.status(201).json({
           message: "Usuário cadastrado com sucesso",
           id: result[0].id,
         });
       } catch (error) {
+        console.error("Erro ao cadastrar usuário:", error);
         res.status(500).json({ error: "Erro ao cadastrar usuário" });
       }
     });
