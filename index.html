@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <link rel="stylesheet" href="./css/styles.css">
+
+    <script type="module" src="./js/script.js" defer></script>
+
+    <title>Sistema de Gestão de Membros - Casa do Pai</title>
+</head>
+
+
+<body class="flex items-center justify-center min-h-screen bg-base-200">
+    <div class="container mx-auto p-4">
+
+        <div class="absolute top-5 right-5">
+            <label class="swap swap-rotate">
+                <input id="btnToggleDarkMode" type="checkbox" class="theme-controller" value="synthwave" />
+                <svg class="swap-on fill-current w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
+                </svg>
+                <svg class="swap-off fill-current w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" />
+                </svg>
+            </label>
+        </div>
+
+
+
+        <!-- Formulário de Login -->
+        <div id="loginForm" class="card w-96 bg-base-100 shadow-xl mx-auto hidden">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-4">Login</h2>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Usuário</span>
+                    </label>
+                    <input type="text" id="loginUsuario" placeholder="Digite seu email" class="input input-bordered" required>
+                    <span id="error-message"></span>
+                </div>
+
+                <div class="form-control mt-4">
+                    <label class="label">
+                        <span class="label-text">Senha</span>
+                    </label>
+                    <div class="relative mt-2 rounded-md shadow-sm">
+                        <input type="password" id="senhalogin" placeholder="Digite sua senha" class="input input-bordered pr-10 w-full" required>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer">
+                            <button id="toggleSenhaLogin" type="button" class="text-gray-500 hover:text-gray-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-control mt-6">
+                    <button id="btnLogin" class="btn btn-primary">Entrar</button>
+                </div>
+
+                <div class="flex justify-between mt-4">
+                    <a href="#" id="linkEsqueciSenha" class="link link-hover text-sm hover:text-primary transition-colors duration-300">
+                        Esqueci minha senha
+                    </a>
+                    <a href="#" id="linkCadastro" class="link link-hover text-sm hover:text-primary transition-colors duration-300">
+                        Cadastre-se
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulário de Cadastro -->
+        <div id="cadastroForm" class="card w-full max-w-2xl bg-base-100 shadow-xl mx-auto hidden">
+            <div class="card-body p-8">
+                <!-- Cabeçalho -->
+                <h2 class="card-title text-2xl mb-6 text-center">Cadastro</h2>
+
+                <!-- Informações Básicas -->
+                <div class="space-y-4 mb-6">
+                    <input type="text" placeholder="Nome Completo" class="input input-bordered w-full" id="nomeCompleto">
+                    <input type="date" class="input input-bordered w-full" id="dataNascimento">
+                    <input type="email" placeholder="Email" class="input input-bordered w-full" id="email">
+                    <input type="tel" placeholder="Telefone" class="input input-bordered w-full" id="telefone">
+                </div>
+
+                <!-- Checkboxes principais -->
+                <div class="space-y-3 mb-6">
+                    <div class="form-control">
+                        <label class="label cursor-pointer justify-between">
+                            <span class="label-text">Concluiu o Batismo</span>
+                            <input type="checkbox" class="checkbox" id="concluiuBatismo" value="concluiuBatismo">
+                        </label>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label cursor-pointer justify-between">
+                            <span class="label-text">Participou do Café de Integração</span>
+                            <input type="checkbox" class="checkbox" id="participouCafe" value="participouCafe">
+                        </label>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label cursor-pointer justify-between">
+                            <span class="label-text">Participa de Algum ministério</span>
+                            <input type="checkbox" class="checkbox" id="participaMinisterio" value="participaMinisterio">
+                        </label>
+                    </div>
+
+                    <select class="select select-bordered w-full hidden" id="selectMinisterio">
+                        <option disabled selected>Qual Ministério:</option>
+                        <option value="1">Acolhimento</option>
+                        <option value="2">Mídias</option>
+                        <option value="3">Louvor</option>
+                        <option value="4">Dança</option>
+                        <option value="5">Infantil</option>
+                        <option value="6">Teens</option>
+                    </select>
+
+                    <div class="form-control">
+                        <label class="label cursor-pointer justify-between">
+                            <span class="label-text">Faz Parte de Alguma Célula</span>
+                            <input type="checkbox" class="checkbox" id="participaCelula" value="participaCelula">
+                        </label>
+                    </div>
+
+                    <select class="select select-bordered w-full hidden" id="selectCelula">
+                        <option disabled selected>Qual célula:</option>
+                        <option value="1">Aba Pai</option>
+                        <option value="2">Dunamis</option>
+                        <option value="3">Exousia</option>
+                        <option value="4">Koinonia</option>
+                        <option value="5">Luz do Mundo</option>
+                        <option value="6">Zoe</option>
+                        <option value="7">A Rede</option>
+                        <option value="8">Atos 2</option>
+                        <option value="9">El Shamah </option>
+                        <option value="10">Freedom</option>
+                        <option value="11">Hermon</option>
+                        <option value="12">Maranata</option>
+                        <option value="13">Reobote</option>
+                        <option value="14">Sal da Terra</option>
+                    </select>
+                </div>
+
+                <!-- Seção de Cursos -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-bold mb-4 text-center">Cursos Concluídos</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Fundamento Cristão -->
+                        <div class="bg-base-200 p-4 rounded-lg">
+                            <h4 class="font-semibold text-center mb-3">Fundamento Cristão</h4>
+                            <div class="space-y-2">
+                                <div class="form-control">
+                                    <label class="label cursor-pointer justify-between">
+                                        <span class="label-text">Meu Novo Caminho</span>
+                                        <input type="checkbox" class="checkbox" id="cursoMeuNovoCaminho" value="cursoMeuNovoCaminho">
+                                    </label>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label cursor-pointer justify-between">
+                                        <span class="label-text">Vida Devocional</span>
+                                        <input type="checkbox" class="checkbox" id="cursoVidaDevocional" value="cursoVidaDevocional">
+                                    </label>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label cursor-pointer justify-between">
+                                        <span class="label-text">Família Cristã</span>
+                                        <input type="checkbox" class="checkbox" id="cursoFamiliaCrista" value="cursoFamiliaCrista">
+                                    </label>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label cursor-pointer justify-between">
+                                        <span class="label-text">Vida de Prosperidade</span>
+                                        <input type="checkbox" class="checkbox" id="cursoVidaProsperidade" value="cursoVidaProsperidade">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Maturidade Cristã -->
+                        <div class="bg-base-200 p-4 rounded-lg">
+                            <h4 class="font-semibold text-center mb-3">Maturidade Cristã</h4>
+                            <div class="space-y-2">
+                                <div class="form-control">
+                                    <label class="label cursor-pointer justify-between">
+                                        <span class="label-text">Princípios de Autoridade</span>
+                                        <input type="checkbox" class="checkbox" id="cursoPrincipiosAutoridade" value="cursoPrincipiosAutoridade">
+                                    </label>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label cursor-pointer justify-between">
+                                        <span class="label-text">Vida no Espírito</span>
+                                        <input type="checkbox" class="checkbox" id="cursoVidaEspirito" value="cursoVidaEspirito">
+                                    </label>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label cursor-pointer justify-between">
+                                        <span class="label-text">Caráter de Cristo</span>
+                                        <input type="checkbox" class="checkbox" id="cursoCaraterCristo" value="cursoCaraterCristo">
+                                    </label>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label cursor-pointer justify-between">
+                                        <span class="label-text">Identidades Restauradas</span>
+                                        <input type="checkbox" class="checkbox" id="cursoIdentidadesRestauradas" value="cursoIdentidadesRestauradas">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção de Senha -->
+                <div class="space-y-4 mb-6">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Senha</span>
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="senhaCadastro" class="input input-bordered w-full" required>
+                            <button type="button" id="toggleSenhaCadastro" class="absolute inset-y-0 right-0 flex items-center px-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Confirme a Senha</span>
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="confirmeSenhaCadastro" class="input input-bordered w-full" required>
+                            <button type="button" id="toggleConfirmeSenhaCadastro" class="absolute inset-y-0 right-0 flex items-center px-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-control">
+                        <progress id="forcaSenha" class="progress w-full" value="0" max="100"></progress>
+                        <p id="forcaSenhaTexto" class="text-sm mt-1 text-center">Força da senha: Muito Fraca</p>
+                    </div>
+                </div>
+
+                <!-- Botões e Links -->
+                <div class="space-y-4 pt-4">
+                    <button class="btn btn-primary w-full" id="btnCadastrar">Cadastrar</button>
+                    <div class="text-center">
+                        <a id="linkVoltarLogin" href="#" class="link link-hover text-sm hover:text-primary transition-colors duration-300">
+                            Já tem uma conta? Faça Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel de gestão -->
+        <div id="dashboard" class="w-full max-w-7xl mx-auto hidden">
+            <div class="navbar bg-base-100 shadow-lg rounded-box mb-4">
+                <div class="flex-1">
+                    <span class="btn btn-ghost normal-case text-xl">Painel</span>
+                </div>
+                <div class="flex-none gap-2">
+                    <button id="btnRelatorio" class="btn btn-ghost normal-case hidden">Relatório de Célula</button>
+                    <button id="btnLogout" class="btn btn-ghost">Sair</button>
+                </div>
+            </div>
+
+            <!-- Conteúdo do dashboard -->
+            <div id="dashboardContent" class="p-4 bg-base-200 rounded-box">
+                <!-- O conteúdo será preenchido dinamicamente -->
+            </div>
+        </div>
+
+        <!-- Redefinição de senha -->
+        <div id="redefinirForm" class="hidden min-h-screen flex items-center justify-center">
+            <div class="card w-96 bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl mb-4">Redefinição de Senha</h2>
+
+                    <div class="space-y-4 mb-6">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Nova Senha</span>
+                            </label>
+                            <div class="relative">
+                                <input type="password" id="novaSenha" class="input input-bordered w-full pr-10" required />
+                                <button id="toggleSenhaNova" class="absolute inset-y-0 right-0 flex items-center px-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Confirme a Senha</span>
+                            </label>
+                            <div class="relative">
+                                <input type="password" id="confirmaSenhaNova" class="input input-bordered w-full pr-10" required />
+                                <button id="toggleConfirmeSenhaNova" class="absolute inset-y-0 right-0 flex items-center px-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-control">
+                            <progress id="forcaSenhaNova" class="progress w-full" value="0" max="100"></progress>
+                            <span id="forcaSenhaNovaTexto" class="text-sm mt-1">Força da senha: Muito Fraca</span>
+                        </div>
+                    </div>
+
+                    <div class="form-control mt-6">
+                        <button id="btnRedefinirSenha" class="btn btn-primary">Redefinir Senha</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modais -->
+        <div id="modalContainer" class="modal">
+            <div class="modal-box">
+                <h3 id="modalTitle" class="font-bold text-lg"></h3>
+                <div id="modalContent" class="mt-4"></div>
+                <div class="modal-action">
+                    <button id="btnCloseModal" class="btn">Fechar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Template para detalhes do usuário -->
+        <template id="conteudoDetalhesUsuario">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <p><strong>Email:</strong> <span id="detalhesEmail"></span></p>
+                    <p><strong>Telefone:</strong> <span id="detalhesTelefone"></span></p>
+                    <p><strong>Data de Nascimento:</strong> <span id="detalhesDataNascimento"></span></p>
+                    <p><strong>Tipo de Usuário:</strong> <span id="detalhesTipoUsuario"></span></p>
+                    <p><strong>Concluiu Batismo:</strong> <span id="detalhesConcluiuBatismo"></span></p>
+                    <p><strong>Participou do Café:</strong> <span id="detalhesParticipouCafe"></span></p>
+                    <p><strong>Participa de Ministério:</strong> <span id="detalhesParticipaMinisterio"></span></p>
+                    <p><strong>Ministério:</strong> <span id="detalhesMinisterio"></span></p>
+                </div>
+                <div>
+                    <p><strong>Participa de Célula:</strong> <span id="detalhesParticipaCelula"></span></p>
+                    <p><strong>Célula:</strong> <span id="detalhesCelula"></span></p>
+                    <h4 class="font-semibold mt-2">Cursos Concluídos:</h4>
+                    <ul id="listaCursosConcluidos" class="list-disc list-inside">
+                        <!-- Cursos serão adicionados dinamicamente aqui -->
+                    </ul>
+                </div>
+            </div>
+            <div id="acoesUsuario" class="flex justify-end mt-4">
+                <!-- Botões de ação serão adicionados dinamicamente aqui -->
+            </div>
+        </template>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary"></div>
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>
