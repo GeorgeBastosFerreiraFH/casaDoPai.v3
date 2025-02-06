@@ -227,6 +227,7 @@ class ServerManager {
           participaministerio,
           idcelula,
           participacelula,
+          nomeministerio,
           ...cursos
         } = req.body;
 
@@ -236,6 +237,10 @@ class ServerManager {
           return res
             .status(400)
             .json({ error: "Campos obrigatórios não preenchidos" });
+        }
+
+        if (idcelula === "Qual célula:") {
+          return res.status(400).json({ error: "Célula inválida" });
         }
 
         const existingUser = await this.executeQuery(
@@ -253,8 +258,8 @@ class ServerManager {
           INSERT INTO usuarios 
           (nomecompleto, datanascimento, email, telefone, senhacadastro, 
            tipoUsuario, concluiuBatismo, participouCafe, participouMinisterio, 
-           idcelula, participacelula)
-          VALUES ($1, $2, $3, $4, $5, 'UsuarioComum', $6, $7, $8, $9, $10)
+           idcelula, participacelula, nomeministerio)
+          VALUES ($1, $2, $3, $4, $5, 'UsuarioComum', $6, $7, $8, $9, $10, $11)
           RETURNING id
           `,
           [
@@ -268,6 +273,7 @@ class ServerManager {
             !!participaministerio,
             idcelula,
             !!participacelula,
+            nomeministerio,
           ]
         );
 
