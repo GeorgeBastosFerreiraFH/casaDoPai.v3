@@ -228,7 +228,14 @@ class ServerManager {
           idcelula,
           participacelula,
           nomeministerio,
-          ...cursos
+          cursomeunovocaminho,
+          cursovidadevocional,
+          cursofamiliacrista,
+          cursovidaprosperidade,
+          cursoprincipiosautoridade,
+          cursovidaespirito,
+          cursocaratercristo,
+          cursoidentidadesrestauradas,
         } = req.body;
 
         console.log("Dados recebidos para cadastro:", req.body);
@@ -258,8 +265,12 @@ class ServerManager {
           INSERT INTO usuarios 
           (nomecompleto, datanascimento, email, telefone, senhacadastro, 
            tipoUsuario, concluiuBatismo, participouCafe, participaMinisterio, 
-           idcelula, participacelula, nomeministerio)
-          VALUES ($1, $2, $3, $4, $5, 'UsuarioComum', $6, $7, $8, $9, $10, $11)
+           idcelula, participacelula, nomeministerio, cursomeunovocaminho, 
+           cursovidadevocional, cursofamiliacrista, cursovidaprosperidade, 
+           cursoprincipiosautoridade, cursovidaespirito, cursocaratercristo, 
+           cursoidentidadesrestauradas)
+          VALUES ($1, $2, $3, $4, $5, 'UsuarioComum', $6, $7, $8, $9, $10, $11, 
+                  $12, $13, $14, $15, $16, $17, $18, $19)
           RETURNING id
           `,
           [
@@ -274,6 +285,14 @@ class ServerManager {
             idcelula,
             !!participacelula,
             nomeministerio,
+            !!cursomeunovocaminho,
+            !!cursovidadevocional,
+            !!cursofamiliacrista,
+            !!cursovidaprosperidade,
+            !!cursoprincipiosautoridade,
+            !!cursovidaespirito,
+            !!cursocaratercristo,
+            !!cursoidentidadesrestauradas,
           ]
         );
 
