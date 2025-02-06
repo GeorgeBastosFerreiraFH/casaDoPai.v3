@@ -22,22 +22,18 @@ class ServerManager {
   }
 
   configureMiddleware() {
-    // Configurações de segurança
     this.app.use(helmet());
 
-    // Rate limiting
     const limiter = rateLimit({
-      windowMs: 15 * 60 * 1000, // 15 minutos
-      max: 100, // limite de 100 requisições por IP
+      windowMs: 15 * 60 * 1000,
+      max: 100,
     });
     this.app.use(limiter);
 
-    // Middleware padrão
     this.app.use(cors());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
 
-    // Configurar diretório estático
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
     this.app.use(express.static(path.join(__dirname, "..")));
@@ -57,7 +53,7 @@ class ServerManager {
 
   async executeQuery(query, params = []) {
     try {
-      const { rows } = await pool.query(query, params); // Método query do pg
+      const { rows } = await pool.query(query, params);
       return rows;
     } catch (error) {
       console.error("Erro na execução da query:", error);
@@ -67,7 +63,7 @@ class ServerManager {
 
   async validateUser(email, senha) {
     const users = await this.executeQuery(
-      "SELECT * FROM usuarios WHERE email = $1", // Sintaxe PostgreSQL com $1 para placeholders
+      "SELECT * FROM usuarios WHERE email = $1",
       [email]
     );
 
@@ -75,7 +71,7 @@ class ServerManager {
       throw new Error("Email não cadastrado");
     }
 
-    const isValid = await bcrypt.compare(senha, users[0].senhaCadastro);
+    const isValid = await bcrypt.compare(senha, users[0].senhacadastro);
     if (!isValid) {
       throw new Error("Senha inválida");
     }
@@ -84,12 +80,11 @@ class ServerManager {
   }
 
   setupRoutes() {
-    // Rota de Recuperação de Senha
     this.app.post("/recuperar-senha", async (req, res) => {
       try {
         const { email } = req.body;
         const users = await this.executeQuery(
-          "SELECT * FROM usuarios WHERE email = ?",
+          "SELECT * FROM usuarios WHERE email = $1",
           [email]
         );
 
@@ -99,7 +94,7 @@ class ServerManager {
 
         const token = this.generateToken();
         await this.executeQuery(
-          "UPDATE usuarios SET tokenRecuperacao = ? WHERE email = ?",
+          "UPDATE usuarios SET tokenrecuperacao = $1 WHERE email = $2",
           [token, email]
         );
 
@@ -118,7 +113,6 @@ class ServerManager {
       }
     });
 
-    // Rota de Login
     this.app.post("/login", async (req, res) => {
       try {
         const { email, senha } = req.body;
@@ -131,8 +125,8 @@ class ServerManager {
             usuario: {
               id: null,
               nome: "Administrador",
-              tipoUsuario: "Administrador",
-              idCelula: null,
+              tipousuario: "Administrador",
+              idcelula: null,
             },
           });
         }
@@ -141,9 +135,9 @@ class ServerManager {
         res.status(200).json({
           usuario: {
             id: user.id,
-            nome: user.nomeCompleto,
-            tipoUsuario: user.tipoUsuario,
-            idCelula: user.idCelula,
+            nome: user.nomecompleto,
+            tipousuario: user.tipousuario,
+            idcelula: user.idcelula,
           },
         });
       } catch (error) {
@@ -151,7 +145,6 @@ class ServerManager {
       }
     });
 
-    // Rota para listar Celulas
     this.app.get("/celulas", async (req, res) => {
       try {
         const celulas = await this.executeQuery("SELECT * FROM celulas");
@@ -161,31 +154,29 @@ class ServerManager {
       }
     });
 
-    // Rota para listar usuários
     this.app.get("/usuarios", async (req, res) => {
       try {
         const users = await this.executeQuery(`
-                    SELECT u.*, c.nomeCelula 
-                    FROM usuarios u 
-                    LEFT JOIN celulas c ON u.idCelula = c.id
-                `);
+          SELECT u.*, c.nomecelula 
+          FROM usuarios u 
+          LEFT JOIN celulas c ON u.idcelula = c.id
+        `);
         res.status(200).json(users);
       } catch (error) {
         res.status(500).json({ error: "Erro ao buscar usuários" });
       }
     });
 
-    // Rota para buscar usuários de uma célula
     this.app.get("/celulas/:idCelula/usuarios", async (req, res) => {
       try {
         const { idCelula } = req.params;
         const users = await this.executeQuery(
           `
-                    SELECT u.*, c.nomeCelula 
-                    FROM usuarios u 
-                    LEFT JOIN celulas c ON u.idCelula = c.id 
-                    WHERE u.idCelula = ? AND u.tipoUsuario = 'UsuarioComum'
-                `,
+          SELECT u.*, c.nomecelula 
+          FROM usuarios u 
+          LEFT JOIN celulas c ON u.idcelula = c.id 
+          WHERE u.idcelula = $1 AND u.tipousuario = 'UsuarioComum'
+          `,
           [idCelula]
         );
 
@@ -200,18 +191,17 @@ class ServerManager {
       }
     });
 
-    // Rota para buscar usuário específico
     this.app.get("/usuarios/:id", async (req, res) => {
       try {
         const { id } = req.params;
         const users = await this.executeQuery(
           `
-                    SELECT u.*, c.nomeCelula, l.nomeCompleto AS nomeLider 
-                    FROM usuarios u
-                    LEFT JOIN celulas c ON u.idCelula = c.id
-                    LEFT JOIN usuarios l ON u.idLiderCelula = l.id
-                    WHERE u.id = ?
-                `,
+          SELECT u.*, c.nomecelula, l.nomecompleto AS nomelider 
+          FROM usuarios u
+          LEFT JOIN celulas c ON u.idcelula = c.id
+          LEFT JOIN usuarios l ON u.idlidercelula = l.id
+          WHERE u.id = $1
+          `,
           [id]
         );
 
@@ -224,35 +214,32 @@ class ServerManager {
       }
     });
 
-    // Rota para cadastrar usuário
     this.app.post("/usuarios", async (req, res) => {
       try {
         const {
-          nomeCompleto,
-          dataNascimento,
+          nomecompleto,
+          datanascimento,
           email,
           telefone,
           senha,
-          tipoUsuario,
-          concluiuBatismo,
-          participouCafe,
-          participaMinisterio,
-          nomeMinisterio,
-          idCelula,
-          participaCelula,
+          tipousuario,
+          concluiubatismo,
+          participoucafe,
+          participaministerio,
+          nomeministerio,
+          idcelula,
+          participacelula,
           ...cursos
         } = req.body;
 
-        // Validar dados
-        if (!nomeCompleto || !email || !senha) {
+        if (!nomecompleto || !email || !senha) {
           return res
             .status(400)
             .json({ error: "Campos obrigatórios não preenchidos" });
         }
 
-        // Verificar email único
         const existingUser = await this.executeQuery(
-          "SELECT id FROM usuarios WHERE email = ?",
+          "SELECT id FROM usuarios WHERE email = $1",
           [email]
         );
         if (existingUser.length > 0) {
@@ -263,65 +250,72 @@ class ServerManager {
 
         const result = await this.executeQuery(
           `
-                    INSERT INTO usuarios 
-                    SET ?
-                `,
+          INSERT INTO usuarios 
+          (nomecompleto, datanascimento, email, telefone, senhacadastro, 
+           tipousuario, concluiubatismo, participoucafe, participaministerio, 
+           nomeministerio, idcelula, participacelula)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+          RETURNING id
+          `,
           [
-            {
-              nomeCompleto,
-              dataNascimento,
-              email,
-              telefone,
-              senhaCadastro: hashedPassword,
-              tipoUsuario: tipoUsuario || "UsuarioComum",
-              concluiuBatismo: !!concluiuBatismo,
-              participouCafe: !!participouCafe,
-              participaMinisterio: !!participaMinisterio,
-              nomeMinisterio,
-              idCelula,
-              participaCelula: !!participaCelula,
-              ...cursos,
-            },
+            nomecompleto,
+            datanascimento,
+            email,
+            telefone,
+            hashedPassword,
+            tipousuario || "UsuarioComum",
+            !!concluiubatismo,
+            !!participoucafe,
+            !!participaministerio,
+            nomeministerio,
+            idcelula,
+            !!participacelula,
           ]
         );
 
         res.status(201).json({
           message: "Usuário cadastrado com sucesso",
-          id: result.insertId,
+          id: result[0].id,
         });
       } catch (error) {
         res.status(500).json({ error: "Erro ao cadastrar usuário" });
       }
     });
 
-    // Rota para atualizar usuário
     this.app.put("/usuarios/:id", async (req, res) => {
       try {
         const { id } = req.params;
         const updateData = { ...req.body };
 
         if (updateData.senha) {
-          updateData.senhaCadastro = await bcrypt.hash(updateData.senha, 10);
+          updateData.senhacadastro = await bcrypt.hash(updateData.senha, 10);
           delete updateData.senha;
         }
 
-        // Verificar se o idCelula foi fornecido e é válido
-        if (updateData.idCelula) {
+        if (updateData.idcelula) {
           const celula = await this.executeQuery(
-            "SELECT id FROM celulas WHERE id = ?",
-            [updateData.idCelula]
+            "SELECT id FROM celulas WHERE id = $1",
+            [updateData.idcelula]
           );
           if (celula.length === 0) {
             return res.status(400).json({ error: "Célula inválida" });
           }
         }
 
+        const fields = Object.keys(updateData);
+        const values = Object.values(updateData);
+        const setClause = fields
+          .map((field, index) => `${field} = $${index + 1}`)
+          .join(", ");
+
         const result = await this.executeQuery(
-          "UPDATE usuarios SET ? WHERE id = ?",
-          [updateData, id]
+          `UPDATE usuarios SET ${setClause} WHERE id = $${
+            fields.length + 1
+          } RETURNING *`,
+          [...values, id]
         );
 
-        if (result.affectedRows === 0) {
+        if (result.length === 0) {
           return res.status(404).json({ error: "Usuário não encontrado" });
         }
 
@@ -331,31 +325,29 @@ class ServerManager {
       }
     });
 
-    // Rota para deletar usuário
     this.app.delete("/usuarios/:id", async (req, res) => {
       try {
         const { id } = req.params;
 
-        // Deletar referências primeiro
         await this.executeQuery(
-          "DELETE FROM usuarios_celulas WHERE idUsuario = ?",
+          "DELETE FROM usuarios_celulas WHERE idusuario = $1",
           [id]
         );
         await this.executeQuery(
-          "DELETE FROM usuarios_ministerios WHERE idUsuario = ?",
+          "DELETE FROM usuarios_ministerios WHERE idusuario = $1",
           [id]
         );
         await this.executeQuery(
-          "DELETE FROM lideres_celulas WHERE idLiderCelula = ?",
+          "DELETE FROM lideres_celulas WHERE idlidercelula = $1",
           [id]
         );
 
         const result = await this.executeQuery(
-          "DELETE FROM usuarios WHERE id = ?",
+          "DELETE FROM usuarios WHERE id = $1 RETURNING *",
           [id]
         );
 
-        if (result.affectedRows === 0) {
+        if (result.length === 0) {
           return res.status(404).json({ error: "Usuário não encontrado" });
         }
 
@@ -365,13 +357,12 @@ class ServerManager {
       }
     });
 
-    // Rota para tornar usuário líder
     this.app.put("/usuarios/:id/tornar-lider", async (req, res) => {
       try {
         const { id } = req.params;
 
         const user = await this.executeQuery(
-          "SELECT * FROM usuarios WHERE id = ?",
+          "SELECT * FROM usuarios WHERE id = $1",
           [id]
         );
         if (user.length === 0) {
@@ -380,25 +371,25 @@ class ServerManager {
 
         const currentUser = user[0];
 
-        if (currentUser.tipoUsuario === "LiderCelula") {
+        if (currentUser.tipousuario === "LiderCelula") {
           return res
             .status(400)
             .json({ error: "Usuário já é líder de célula" });
         }
 
-        if (!currentUser.idCelula) {
+        if (!currentUser.idcelula) {
           return res
             .status(400)
             .json({ error: "O usuário não está associado a nenhuma célula" });
         }
 
         await this.executeQuery(
-          "UPDATE usuarios SET tipoUsuario = ? WHERE id = ?",
+          "UPDATE usuarios SET tipousuario = $1 WHERE id = $2",
           ["LiderCelula", id]
         );
         await this.executeQuery(
-          "INSERT INTO lideres_celulas (idLiderCelula, idCelula, dataInicio) VALUES (?, ?, CURDATE())",
-          [id, currentUser.idCelula]
+          "INSERT INTO lideres_celulas (idlidercelula, idcelula, datainicio) VALUES ($1, $2, CURRENT_DATE)",
+          [id, currentUser.idcelula]
         );
 
         res
@@ -409,13 +400,12 @@ class ServerManager {
       }
     });
 
-    // Rota para rebaixar líder
     this.app.put("/usuarios/:id/rebaixar-lider", async (req, res) => {
       try {
         const { id } = req.params;
 
         const user = await this.executeQuery(
-          "SELECT * FROM usuarios WHERE id = ? AND tipoUsuario = ?",
+          "SELECT * FROM usuarios WHERE id = $1 AND tipousuario = $2",
           [id, "LiderCelula"]
         );
 
@@ -424,11 +414,11 @@ class ServerManager {
         }
 
         await this.executeQuery(
-          "UPDATE usuarios SET tipoUsuario = ? WHERE id = ?",
+          "UPDATE usuarios SET tipousuario = $1 WHERE id = $2",
           ["UsuarioComum", id]
         );
         await this.executeQuery(
-          "DELETE FROM lideres_celulas WHERE idLiderCelula = ?",
+          "DELETE FROM lideres_celulas WHERE idlidercelula = $1",
           [id]
         );
 
