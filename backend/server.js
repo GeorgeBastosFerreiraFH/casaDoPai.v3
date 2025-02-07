@@ -117,21 +117,8 @@ class ServerManager {
       try {
         const { email, senha } = req.body;
 
-        if (email === "Administrador") {
-          if (senha !== "Password321@") {
-            return res.status(401).json({ error: "Senha inválida" });
-          }
-          return res.status(200).json({
-            usuario: {
-              id: null,
-              nome: "Administrador",
-              tipousuario: "Administrador",
-              idcelula: null,
-            },
-          });
-        }
-
         const user = await this.validateUser(email, senha);
+
         res.status(200).json({
           usuario: {
             id: user.id,
