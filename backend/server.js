@@ -947,17 +947,4 @@ class FormManager {
 // Inicialização
 document.addEventListener("DOMContentLoaded", () => {
   new FormManager();
-  verificarTokenRecuperacao();
 });
-
-function verificarTokenRecuperacao() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get("token");
-
-  if (token) {
-    document.querySelector("#loginForm").classList.add("hidden");
-    document.querySelector("#cadastroForm").classList.add("hidden");
-    document.querySelector("#dashboard").classList.add("hidden");
-    document.querySelector("#redefinirForm").classList.remove("hidden");
-  }
-}
