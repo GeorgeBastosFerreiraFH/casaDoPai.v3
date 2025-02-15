@@ -41,7 +41,7 @@ class ServerManager {
 
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
-    this.app.use(express.static(path.join(__dirname, "..")));
+    this.app.use(express.static(path.join(__dirname, "../..")));
   }
 
   configureEmail() {
@@ -447,9 +447,10 @@ class ServerManager {
     });
 
     this.app.get("/redefinir-senha", (req, res) => {
-      const __filename = fileURLToPath(import.meta.url);
-      const __dirname = dirname(__filename);
-      res.sendFile(path.join(__dirname, "../index.html"));
+      const token = req.query.token;
+      res.redirect(
+        `https://casa-do-pai-v3-1.vercel.app/index.html?token=${token}`
+      );
     });
   }
 
