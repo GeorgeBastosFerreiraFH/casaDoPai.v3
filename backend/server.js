@@ -102,7 +102,7 @@ class ServerManager {
           from: "ge.be.web.design@gmail.com",
           to: email,
           subject: "Recuperação de Senha",
-          text: `Clique no link para redefinir sua senha: http://localhost:3000/redefinir-senha?token=${token}`,
+          text: `Clique no link para redefinir sua senha: https://casa-do-pai-v3-1.vercel.app/redefinir-senha?token=${token}`,
         };
 
         await this.transporter.sendMail(mailOptions);
