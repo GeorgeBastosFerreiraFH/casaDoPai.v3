@@ -30,7 +30,12 @@ class ServerManager {
     });
     this.app.use(limiter);
 
-    this.app.use(cors());
+    const corsOptions = {
+      origin: "https://casa-do-pai-v3-1.vercel.app",
+      optionsSuccessStatus: 200,
+    };
+    this.app.use(cors(corsOptions));
+
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
 
