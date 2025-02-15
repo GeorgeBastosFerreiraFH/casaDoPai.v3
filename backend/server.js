@@ -440,6 +440,12 @@ class ServerManager {
         res.status(500).json({ error: "Erro ao rebaixar líder" });
       }
     });
+
+    this.app.get("/redefinir-senha", (req, res) => {
+      const __filename = fileURLToPath(import.meta.url);
+      const __dirname = dirname(__filename);
+      res.sendFile(path.join(__dirname, "../index.html"));
+    });
   }
 
   generateToken() {
