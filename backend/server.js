@@ -452,6 +452,33 @@ class ServerManager {
         `https://casa-do-pai-v3-1.vercel.app/index.html?token=${token}`
       );
     });
+
+    this.app.post("/atualizar-senha", async (req, res) => {
+      try {
+        const { token, novaSenha } = req.body;
+
+        const users = await this.executeQuery(
+          "SELECT * FROM usuarios WHERE tokenrecuperacao = $1",
+          [token]
+        );
+
+        if (users.length === 0) {
+          return res.status(404).json({ error: "Token inválido" });
+        }
+
+        const hashedPassword = await bcrypt.hash(novaSenha, 10);
+
+        await this.executeQuery(
+          "UPDATE usuarios SET senhacadastro = $1, tokenrecuperacao = NULL WHERE tokenrecuperacao = $2",
+          [hashedPassword, token]
+        );
+
+        res.status(200).json({ message: "Senha atualizada com sucesso" });
+      } catch (error) {
+        console.error("Erro ao atualizar senha:", error);
+        res.status(500).json({ error: "Erro ao atualizar senha" });
+      }
+    });
   }
 
   generateToken() {
